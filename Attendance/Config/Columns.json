@@ -1,0 +1,46 @@
+{
+  "Attendance": {
+    "Id": {
+      "description": "考勤编号",
+      "order": 0,
+      "visiable": true
+    },
+    "Name": {
+      "description": "姓名",
+      "order": 1,
+      "visiable": true
+    },
+    "ValidOfAtt": {
+      "visiable": false
+    },
+    "TimesOfCheck": {
+      "visiable": false
+    },
+    "Details": {
+      "visiable": false
+    },
+    "DaysOfAtt": {
+      "description": "实际出勤天数",
+      "order": 2,
+      "visiable": true
+    },
+    "DaysOfLate": {
+      "description": "迟到次数",
+      "order": 3,
+      "visiable": true
+    },
+    "DaysOfEarly": {
+      "description": "早退次数",
+      "order": 4,
+      "visiable": true
+    },
+    "DaysOfLeave": {
+      "description": "请假天数",
+      "order": 5,
+      "visiable": true
+    },
+    "TargetMonth": {
+      "visiable": false
+    }
+  }
+}
