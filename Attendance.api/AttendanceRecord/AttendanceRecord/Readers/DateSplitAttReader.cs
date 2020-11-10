@@ -23,9 +23,10 @@ namespace Attendance.Readers
                     record.Id = item.Id;
                     record.Name = item.Name;
                     record.Department = item.Department;
+                    record.Date = DateTime.Parse(item.Date.ToString("yyyy/MM/dd"));
                     var rDate = DateTime.Now;
                     if (DateTime.TryParse(item.Date.ToString("yyyy/MM/dd") + " " + multiTimes[i], out rDate))
-                        record.AddtendanceTime = rDate;
+                        record.AttendanceTime = rDate;
                     else
                         throw new Exception("dateformat " + item.Date + item.Date + " " + multiTimes[i]);
                     result.Add(record);

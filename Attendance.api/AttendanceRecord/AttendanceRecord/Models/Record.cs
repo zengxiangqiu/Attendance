@@ -21,11 +21,11 @@ namespace Attendance.Models
         public DateTime Date { get; set; }
         [Column("考勤时间")]
         public string MultiTime { get; set; }
-        public virtual DateTime AddtendanceTime { get; set; }
+        public virtual DateTime AttendanceTime { get; set; }
 
         public int CompareTo(DateSplitAttRecord obj)
         {
-            return this.AddtendanceTime.CompareTo(obj.AddtendanceTime);
+            return this.AttendanceTime.CompareTo(obj.AttendanceTime);
         }
     }
 
@@ -35,6 +35,6 @@ namespace Attendance.Models
         [Column("考勤号码")]
         public override int Id { get; set; }
         [Column("日期时间", CustomFormat = "yyyy/MM/dd hh.mm.ss")]
-        public override DateTime AddtendanceTime { get; set; }
+        public override DateTime AttendanceTime { get; set; }
     }
 }

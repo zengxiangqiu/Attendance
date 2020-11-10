@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.Models
 {
-    public class AttendanceResult
+    public class AttenSummary
     {
         //姓名 实际出勤天数  请假 迟到/早退（次数）	加班（时数）
 

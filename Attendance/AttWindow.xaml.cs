@@ -2,11 +2,12 @@
 using Attendance.Readers;
 using Attendance.Services;
 using Attendance.ViewModels;
-using AttendanceRecord.Readers;
 using Microsoft.Win32;
+using Npoi.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,9 +26,9 @@ namespace Attendance
     /// <summary>
     /// AttWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class AttWindow : UserControl
+    public partial class AttWindow 
     {
-        public event Action<Attendance<DateSplitAttRecord>> SelectedChange;
+        public event Action<Attendance<DateSplitAttRecord>,int> SelectedChange;
 
         public AttWindow()
         {
@@ -40,7 +41,7 @@ namespace Attendance
             var service = new AttendanceService();
             var allRecords = service.GetAttRecords(files);
 
-            var Attendances = service.SplitAttsByName(allRecords, DateTime.Parse("2020/08/01"));
+            var Attendances = service.SplitAttsByName(allRecords, allRecords.First().Date,Sys.SettingPath);
             return Attendances;
         }
 
@@ -99,7 +100,32 @@ namespace Attendance
         {
             //var destination = ((Hyperlink)e.OriginalSource).NavigateUri.OriginalString;
             var context = (Attendance<DateSplitAttRecord>)(sender as TextBlock).DataContext;
-            SelectedChange?.Invoke(context);
+            //SelectedChange?.Invoke(context, context.Details.GroupBy(x => x.Day).FirstOrDefault()?.Key.Month ?? DateTime.Now.Month);
+
+            //lvDetail.DataContext = context.Details.SelectMany(x=>x.Records).ToList();
+                var targetMonth = context.Details.First().Day.Month;
+                var targetYear = context.Details.First().Day.Year;
+                var d = new DateTime(targetYear, targetMonth, 1);
+
+            for (int i = 0; i < 42; i++)
+            {
+                if (!context.Details.Any(x => x.Day == d) && d.Month == targetMonth)
+                {
+                    context.Details.Add(new AttendanceDetail { Day = d, AttType = AttendanceType.Exception });
+                }
+                d = d.AddDays(1);
+            }
+
+            dvDetail.DataContext = context.Details;
+
+            //lvDetail.ItemsSource = context.Details;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(dvDetail.ItemsSource);
+            //PropertyGroupDescription groupDescription = new PropertyGroupDescription("AttType");
+            //view?.GroupDescriptions.Add(groupDescription);
+
+            SortDescription sortDescription = new SortDescription("Day", ListSortDirection.Ascending);
+            view?.SortDescriptions.Add(sortDescription);
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -116,15 +142,19 @@ namespace Attendance
                 context.InputFiles.Clear();
                 files.ForEach(context.InputFiles.Add);
 
-                var attendances = InitAttendances(fileDialog.FileNames);
-                attendances.ToList().ForEach(context.Attendances.Add);
+                try
+                {
+                    var attendances = InitAttendances(fileDialog.FileNames);
+                    attendances.ToList().ForEach(context.Attendances.Add);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "提示");
+                }
+    
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
@@ -144,22 +174,27 @@ namespace Attendance
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             var context = (AttViewModel)this.DataContext;
-
-            AttResultReader resultReader = new AttResultReader();
-            var result =  resultReader.GetRecords(context.TargetPath);
-            result.ForEach(x =>
-            {
-                var attendance = context.Attendances.Where(y => y.Name == x.Name).FirstOrDefault();
-                if (attendance != null)
-                {
-                    x.DaysOfAtt = attendance.DaysOfAtt;
-                    x.DaysOfLateOrEarly = attendance.DaysOfLate + attendance.DaysOfEarly;
-                    x.DaysOfLeave = attendance.DaysOfLeave;
-                }
-            });
-
-            resultReader.InjectResult(result, context.TargetPath);
+            
+            var service = new AttendanceService();
+            service.Inject(context.Attendances.AsEnumerable(), context.TargetPath);
+            
             MessageBox.Show("已成功注入","提示");
+        }
+
+        private void BtnSetting_Click(object sender, RoutedEventArgs e)
+        {
+            var context = (AttViewModel)this.DataContext;
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Excel Files|*.xls;*.xlsx;";
+            fileDialog.Title = "选择导入的文件";
+            fileDialog.RestoreDirectory = true;
+            fileDialog.Multiselect = false;
+            if (fileDialog.ShowDialog() == true)
+            {
+                var file = fileDialog.FileName;
+                Sys.SettingPath = file;
+                context.SettingPath = file;
+            }
         }
     }
 }

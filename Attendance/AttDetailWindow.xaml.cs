@@ -28,21 +28,16 @@ namespace Attendance
         private Attendance<DateSplitAttRecord> _attendance;
 
         public AttDetailWindow()
-        { }
-            
-
-        public AttDetailWindow(Attendance<DateSplitAttRecord> attendance)
         {
-
             InitializeComponent();
+        }
 
-            int year = 2020, month = 8;
+        public void InitView(Attendance<DateSplitAttRecord> attendances, int month)
+        {
+            var year = DateTime.Now.Year;
             DateTime targetDate = new DateTime(year, month, 1);
-
             Calendar.BuildCalendar(targetDate);
-
-            _attendance = attendance;
-
+            _attendance = attendances;
             getNotesFromDb(_attendance);
         }
 
@@ -56,8 +51,9 @@ namespace Attendance
                 x.AttendanceType = AttendanceType.Normal;
                 if (!details.Any(y => y.Day == x.Date))
                 {
-                    AttendanceDetail detail = new AttendanceDetail {
-                        AttType = AttendanceType.NonNormal,
+                    AttendanceDetail detail = new AttendanceDetail
+                    {
+                        AttType = AttendanceType.Exception,
                         Day = x.Date,
                         Records = new List<DateSplitAttRecord>()
                     };
@@ -69,7 +65,7 @@ namespace Attendance
             {
                 date = x.Day,
                 AttendanceType = x.AttType,
-                notes = x.Records.Aggregate("", (count, next) => count + next.AddtendanceTime.ToString("hh:mm:ss") + "\r\n")
+                notes = x.Records.Aggregate("", (count, next) => count + next.AttendanceTime.ToString("HH:mm:ss") + "\r\n")
             }).ToList();
 
             //var month =  cboMonth.SelectedIndex + 1;
@@ -135,12 +131,12 @@ namespace Attendance
                 {
                     try
                     {
-                        var target =  _attendance.Details.Where(x => x.Day == item.Date).First();
+                        var target = _attendance.Details.Where(x => x.Day == item.Date).First();
                         target.AttType = item.AttendanceType;
                     }
                     catch (Exception)
                     {
-                        
+
                     }
                 }
             }

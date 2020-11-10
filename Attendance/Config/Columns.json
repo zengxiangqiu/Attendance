@@ -41,6 +41,10 @@
     },
     "TargetMonth": {
       "visiable": false
+    },
+    "StaffAttenType": {
+      "visiable": false
     }
+
   }
 }

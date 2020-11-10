@@ -27,9 +27,10 @@ namespace Attendance.ViewModels
             CurrentView = _view1;
         }
 
-        private void AttWindow_SelectedChange(Attendance<DateSplitAttRecord> obj)
+        private void AttWindow_SelectedChange(Attendance<DateSplitAttRecord> obj,int month)
         {
-            var detailWindow= new AttDetailWindow(obj);
+            var detailWindow= new AttDetailWindow();
+            detailWindow.InitView(obj, month);
             detailWindow.CloseEvent += DetailWindow_CloseEvent;
             _view2 = detailWindow;
             CurrentView = _view2;

@@ -85,6 +85,12 @@ namespace Attendance.Models
         public int TargetMonth { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+
+        /// <summary>
+        /// 班次（正常、倒班）
+        /// </summary>
+        public StaffAttenType StaffAttenType { get; set; } = StaffAttenType.NormalWork;
     }
 
     /// <summary>
@@ -95,7 +101,7 @@ namespace Attendance.Models
     {
         public DateTime Day { get; set; }
         public List<DateSplitAttRecord> Records { get; set; }
-        public AttendanceType AttType { get; set; } = AttendanceType.NonNormal;
+        public AttendanceType AttType { get; set; } = AttendanceType.Exception;
     }
 
     /// <summary>
@@ -107,12 +113,28 @@ namespace Attendance.Models
         /// <summary>
         /// 异常，需人工判定
         /// </summary>
-        NonNormal,
+        Exception,
 
         /// <summary>
         /// 请假
         /// </summary>
         Leave
 
+    }
+
+    /// <summary>
+    /// 员工班次类别
+    /// </summary>
+    public enum StaffAttenType
+    {
+        /// <summary>
+        /// 正常
+        /// </summary>
+        NormalWork,
+
+        /// <summary>
+        /// 倒班
+        /// </summary>
+        ShiftWork
     }
 }

@@ -35,7 +35,7 @@ namespace Attendance.Console
                 Id = x.Key.Id,
                 Name = x.Key.Name,
                 Details = x
-                    .GroupBy(y => y.AddtendanceTime.ToString("yyyy/MM/dd"))
+                    .GroupBy(y => y.AttendanceTime.ToString("yyyy/MM/dd"))
                     .Select(y => new AttendanceDetail { Day = DateTime.Parse(y.Key), Records = y.ToList() })
                     .ToList(),
                 TimesOfCheck = new string[] { "07:00:00", "12:00:00", "13:30:00", "17:00:00" },

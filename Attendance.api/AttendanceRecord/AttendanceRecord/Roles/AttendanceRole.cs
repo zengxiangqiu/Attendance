@@ -14,14 +14,14 @@ namespace Attendance.Roles
             return details.Records.Count() >= validOfAtt;
         }
 
-        public static int EarlyRole(AttendanceDetail details, int validOfAtt, string[] timesOfCheck)
+        public static int EarlyRole(AttendanceDetail details, int validOfAtt, string[] timesOfCheck,StaffAttenType staffAttenType)
         {
             //同一小时内取min
-            var records = details.Records.GroupBy(x => x.AddtendanceTime.ToString("hh"))
-.Select(x => x.ToList().Min()).OrderBy(x => x.AddtendanceTime).ToArray();
+            var records = details.Records.GroupBy(x => x.AttendanceTime.ToString("hh"))
+.Select(x => x.ToList().Min()).OrderBy(x => x.AttendanceTime).ToArray();
             //var records = details.Records.OrderBy(x => x.AddtendanceTime).ToArray();
 
-            if (records.Count() < validOfAtt)
+            if (records.Count() < validOfAtt || details.AttType != AttendanceType.Normal || staffAttenType!= StaffAttenType.NormalWork)
             {
                 //异常，不计入迟到范围，人工判定
                 return 0;
@@ -36,15 +36,15 @@ namespace Attendance.Roles
                         //超出部分无法判定
                         break;
                     }
-                    var AddtendanceTime = records[i].AddtendanceTime;
+                    var attendanceTime = records[i].AttendanceTime;
                     var flag = i % 2 != 0;
                     //true , even, 判定早退
                     if (flag)
                     {
-                        var normalTime = new DateTime(AddtendanceTime.Year, AddtendanceTime.Month, AddtendanceTime.Day);
+                        var normalTime = new DateTime(attendanceTime.Year, attendanceTime.Month, attendanceTime.Day);
                         var tm = TimeSpan.Parse(timesOfCheck[i]);
                         normalTime = normalTime.Add(tm);
-                        if (AddtendanceTime < normalTime)
+                        if (attendanceTime < normalTime)
                             counter++;
                     }
                 }
@@ -52,11 +52,11 @@ namespace Attendance.Roles
             }
         }
 
-        public static int LateRole(AttendanceDetail details, int validOfAtt, string[] timesOfCheck)
+        public static int LateRole(AttendanceDetail details, int validOfAtt, string[] timesOfCheck, StaffAttenType staffAttenType)
         {
-            var records = details.Records.GroupBy(x => x.AddtendanceTime.ToString("hh"))
-            .Select(x => x.ToList().Min()).OrderBy(x => x.AddtendanceTime).ToArray();
-            if (records.Count() < validOfAtt)
+            var records = details.Records.GroupBy(x => x.AttendanceTime.ToString("hh"))
+            .Select(x => x.ToList().Min()).OrderBy(x => x.AttendanceTime).ToArray();
+            if (records.Count() < validOfAtt || details.AttType != AttendanceType.Normal || staffAttenType != StaffAttenType.NormalWork)
             {
                 //异常，不计入迟到范围，人工判定
                 return 0;
@@ -71,7 +71,7 @@ namespace Attendance.Roles
                         //超出部分无法判定
                         break;
                     }
-                    var AddtendanceTime = records[i].AddtendanceTime;
+                    var AddtendanceTime = records[i].AttendanceTime;
                     var flag = i % 2 == 0;
                     //true , even, 判定迟到
                     if (flag)

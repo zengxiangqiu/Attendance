@@ -1,4 +1,4 @@
-﻿<Window 
+﻿<mah:MetroWindow  
         x:Class="Attendance.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:Attendance"
         xmlns:view="clr-namespace:Attendance.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"  >
+         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="考勤统计" Height="550" Width="1000"  >
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:AttWindow}">
             <local:AttWindow/>
@@ -22,4 +23,4 @@
     <Grid>
         <ContentControl Content="{Binding CurrentView}" />
     </Grid>
-</Window>
+</mah:MetroWindow>

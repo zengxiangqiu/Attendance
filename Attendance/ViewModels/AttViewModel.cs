@@ -36,5 +36,18 @@ namespace Attendance.ViewModels
             }
         }
 
+        private string settingPath;
+
+        public string SettingPath
+        {
+            get { return settingPath; }
+            set
+            {
+                settingPath = value;
+                OnPropertyChanged("SettingPath");
+
+            }
+        }
+
     }
 }

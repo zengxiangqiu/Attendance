@@ -7,8 +7,8 @@
     <ProjectGuid>{DAADA54C-53E3-44E6-86F6-E9C46ADC8A74}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AttendanceRecord</RootNamespace>
-    <AssemblyName>AttendanceRecord</AssemblyName>
+    <RootNamespace>Attendance.api</RootNamespace>
+    <AssemblyName>Attendance.api</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -63,8 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\AttendanceResult.cs" />
-    <Compile Include="Readers\AttResultReader.cs" />
+    <Compile Include="Models\AttenSetting.cs" />
+    <Compile Include="Models\AttenSummary.cs" />
+    <Compile Include="Readers\AttenSettingReader.cs" />
+    <Compile Include="Readers\AttenSumReader.cs" />
     <Compile Include="Readers\NormalAttReader.cs" />
     <Compile Include="Models\Record.cs" />
     <Compile Include="Readers\AttendanceReader.cs" />
