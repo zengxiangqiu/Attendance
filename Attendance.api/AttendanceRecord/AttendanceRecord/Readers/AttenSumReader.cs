@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using System.IO;
+using NPOI.SS.UserModel;
 
 namespace Attendance.Readers
 {
@@ -15,10 +16,20 @@ namespace Attendance.Readers
     {
         public void Inject(IEnumerable<Attendance<DateSplitAttRecord>> attendances, string fileName)
         {
-            HSSFWorkbook workbook;
+            IWorkbook workbook;
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite))
             {
-                workbook =  new HSSFWorkbook(fs);
+                try
+                {
+                    workbook = new HSSFWorkbook(fs);
+                }
+                catch (NPOI.POIFS.FileSystem.OfficeXmlFileException ex)
+                {
+                    using (FileStream fsx = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite))
+                    {
+                        workbook = new XSSFWorkbook(fsx);
+                    }
+                }
                 var sheet = workbook.GetSheetAt(0);
                var lastRowNum = sheet.LastRowNum;
                 foreach (Attendance<DateSplitAttRecord> staff in attendances)

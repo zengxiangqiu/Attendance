@@ -145,9 +145,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Config\1_考勤汇总_2.xlsx" />
     <None Include="Config\Columns.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Config\Setting.xls" />
+    <None Include="Config\考勤1.xls" />
+    <None Include="Config\考勤3.xls" />
+    <None Include="Config\考勤4.xls" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
